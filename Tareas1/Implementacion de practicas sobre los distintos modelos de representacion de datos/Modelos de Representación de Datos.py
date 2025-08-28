@@ -28,7 +28,9 @@ def mostrar_materias_semestre(semestre):
 print(buscar_materia("3-1"))
 mostrar_materias_semestre("4")
 
-"""Modelo Dinámico: Registro de asistencia a clases
+
+
+"""  Modelo Dinámico: Registro de asistencia a clases
 Modelo Dinámico: Registro de asistencia a clases Descripción: Un estudiante registra su entrada y salida de clases diariamente. Los datos cambian cada día.
 """
 # Lista dinámica: registro de asistencia
@@ -67,3 +69,91 @@ registrar_salida("Matemática II", "12:15")
 
 mostrar_asistencias()
 print(f"Asistí a {contar_clases('Redes de Computadoras I')} clases de Redes I.")
+
+
+
+"""    Modelo Persistente: Guardar calificaciones del estudiante en archivo JSON
+Descripción: Guardar las calificaciones del estudiante para que no se pierdan al cerrar el programa."""
+
+import json
+
+def cargar_calificaciones(nombre_archivo="calificaciones_uagrm.json"):
+    try:
+        with open(nombre_archivo, "r") as archivo:
+            return json.load(archivo)
+    except FileNotFoundError:
+        return {}
+
+def guardar_calificaciones(calificaciones, nombre_archivo="calificaciones_uagrm.json"):
+    with open(nombre_archivo, "w") as archivo:
+        json.dump(calificaciones, archivo, indent=2)
+
+def agregar_calificacion(materia, nota):
+    calificaciones[materia] = nota
+    print(f"Calificación de {materia}: {nota}")
+
+def mostrar_calificaciones():
+    print("\nCalificaciones del estudiante:")
+    for materia, nota in calificaciones.items():
+        print(f" - {materia}: {nota}")
+
+# Uso del sistema
+calificaciones = cargar_calificaciones()
+
+agregar_calificacion("Redes de Computadoras I", 87)
+agregar_calificacion("Matemática II", 74)
+agregar_calificacion("Física I", 81)
+
+mostrar_calificaciones()
+guardar_calificaciones(calificaciones)
+
+
+"""    Modelo Simulado: Sistema de préstamos del Laboratorio de Redes
+Descripción: Simulación de un sistema donde los estudiantes piden prestado equipo del laboratorio (switches, routers, laptops). """
+
+class PrestamoLaboratorio:
+    def __init__(self):
+        self.equipos = {
+            "Router Cisco 2900": 3,
+            "Switch Cisco 2960": 5,
+            "Laptop HP": 10
+        }
+        self.historial = []
+
+    def prestar_equipo(self, estudiante, equipo, cantidad):
+        if self.equipos.get(equipo, 0) >= cantidad:
+            self.equipos[equipo] -= cantidad
+            self.historial.append({
+                "estudiante": estudiante,
+                "equipo": equipo,
+                "cantidad": cantidad
+            })
+            print(f"✅ {cantidad} {equipo}(s) prestado(s) a {estudiante}.")
+        else:
+            print(f"❌ No hay suficientes {equipo} disponibles.")
+
+    def mostrar_disponibilidad(self):
+        print("\nEquipos disponibles en el laboratorio:")
+        for equipo, cantidad in self.equipos.items():
+            print(f" - {equipo}: {cantidad}")
+
+    def mostrar_historial(self):
+        print("\nHistorial de préstamos:")
+        if not self.historial:
+            print(" - No hay préstamos registrados.")
+        else:
+            for prestamo in self.historial:
+                print(f" - {prestamo['estudiante']} → {prestamo['cantidad']} {prestamo['equipo']}")
+
+# Uso del sistema
+lab_redes = PrestamoLaboratorio()
+
+lab_redes.prestar_equipo("Carlos Méndez", "Router Cisco 2900", 1)
+lab_redes.prestar_equipo("Ana Pérez", "Laptop HP", 2)
+lab_redes.prestar_equipo("Luis Gómez", "Switch Cisco 2960", 6)  # Demasiado
+
+lab_redes.mostrar_disponibilidad()
+lab_redes.mostrar_historial()
+
+
+
